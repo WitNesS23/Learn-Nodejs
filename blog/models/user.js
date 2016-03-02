@@ -34,11 +34,12 @@ User.prototype.save = function(callback){
 			collection.insert(user, {
 				safe: true
 			}, function(err, user){
-				mongodb.close();
 				if(err){
+					mongodb.close();
 					return callback(err); // wrong, return the err info
 				}
 
+				mongodb.close();
 				callback(null, user[0]);
 			})
 		})
@@ -62,11 +63,12 @@ User.get = function(name, callback){
 			collection.findOne({
 				name: name
 			}, function(err, user){
-				mongodb.close();
-
 				if(err){
+					mongodb.close();
 					return callback(err);
 				}
+
+				mongodb.close();
 				callback(null, user);
 			});
 		})
