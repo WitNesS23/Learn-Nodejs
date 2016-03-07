@@ -1,5 +1,5 @@
 var crypto = require("crypto");
-User = require('../models/user.js');
+User = require('../models/user_mysql.js');
 
 module.exports = function(app) {
     app.get("/", function(req, res) {
@@ -89,13 +89,18 @@ module.exports = function(app) {
                 return res.redirect('/');
             }
 
-            if (user) {
-                if (user.password == password) {
-                    req.session.user = user;
-                    req.flash('success', '登陆成功');
-                    res.redirect('/');
-                }
+            if(!user){
+                req.flash('error', '用户不存在');
+                req.redirect('/login');
             }
+
+            if (user.password != password) {
+                req.flash('error', '输入密码不正确');
+            }
+                    
+            req.session.user = user;
+            req.flash('success', '登陆成功');
+            res.redirect('/');
         })
     });
 
