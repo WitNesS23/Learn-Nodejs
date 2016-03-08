@@ -9,9 +9,10 @@ function User(user){
 module.exports = User;
 
 User.prototype.save = function(callback){
+	var that = this;
 	mysqldb.getConnection(function(err, connection){
-		var that = this;
-		connection.query('insert UserInfo(UserName, UserPassword, UserEmail) values(' + that.name + ', ' + that.password +', ' + that.email + ')', function(err, result){
+		var queryString = 'insert userinfo(UserName, UserPassword, UserEmail) values("' + that.name + '", "' + that.password +'", "' + that.email + '")';
+		connection.query(queryString, function(err, result){
 			if(result){
 				result = {
 					status: 200,
@@ -29,7 +30,7 @@ User.prototype.save = function(callback){
 
 User.get = function(name, callback){
 	mysqldb.getConnection(function(err, connection){
-		connection.query('select count(*) from UserInfo where UserName = "' + name + '"', function(err, result){
+		connection.query('select count(*) from userinfo where UserName = "' + name + '"', function(err, result){
 			if(err){
 				connection.release();
 				return callback(err);

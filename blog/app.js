@@ -9,7 +9,7 @@ var session = require("express-session");
 var mongoStore = require("connect-mongo/es5")(session);
 
 var routes = require('./routes/index');
-var settings = require('./settings')("mysql");
+var settings = require('./settings')("mongodb");
 var flash = require('connect-flash');
 
 var app = express();
@@ -30,11 +30,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
     secret: settings.cookieSecret
-    // ,key: settings.db, // cookie name
-    // cookie: {maxAge: 1000 * 60 * 60 * 24 * 30}, // 30 days
-    // store: new mongoStore({
-    //     url: "mongodb://" + settings.host + "/" + settings.db
-    // })
+    ,key: settings.db, // cookie name
+    cookie: {maxAge: 1000 * 60 * 60 * 24 * 30}, // 30 days
+    store: new mongoStore({
+        url: "mongodb://" + settings.host + "/" + settings.db
+    })
 }));
 
 routes(app);
